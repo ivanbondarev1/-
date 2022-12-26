@@ -185,6 +185,8 @@ d.	Настройте первые пять линий VTY на каждом у�
 
 ![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/R1(SSH).png?raw=true)
 
+*ip ssh ver 2
+
 *line vty 0 4
 
 *transport input ssh
@@ -194,6 +196,8 @@ d.	Настройте первые пять линий VTY на каждом у�
 ### **R2:**
 
 ![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/R2(SSH).png?raw=true)
+
+*ip ssh ver 2
 
 *line vty 0 4
 
