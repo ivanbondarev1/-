@@ -267,7 +267,7 @@ b.	Настройте R1 для проверки подлинности поль
 ### **Шаг 3. Убедитесь, что политики безопасности применяются развернутыми списками доступа.**
 
 
-![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/DB-2.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/DB-3.png?raw=true)
 
 
 ![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/DB-2(int).png?raw=true)
@@ -284,6 +284,15 @@ b.	Настройте R1 для проверки подлинности поль
 ### **SSH:**
 
 ![](https://github.com/ivanbondarev1/Otus/blob/main/DZ11/SSH(ACL).png?raw=true)
+
+
+
+
+
+
+
+
+
 
 
 
