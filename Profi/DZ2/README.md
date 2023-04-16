@@ -206,7 +206,7 @@ VLAN0001
   Spanning tree enabled protocol ieee
   Root ID    Priority    32769
              Address     0001.434C.B255
-             Cost        19
+             Cost        18
              Port        4(FastEthernet0/4)
              Hello Time  2 sec  Max Age 20 sec  Forward Delay 15 sec
 
@@ -217,8 +217,8 @@ VLAN0001
 
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
-Fa0/2            Altn BLK 18        128.2    P2p
-Fa0/4            Root FWD 19        128.4    P2p
+Fa0/2            Desg FWD 18        128.2    P2p
+Fa0/4            Root FWD 18        128.4    P2p
 ```
 
 ```
@@ -239,7 +239,7 @@ VLAN0001
 Interface        Role Sts Cost      Prio.Nbr Type
 ---------------- ---- --- --------- -------- --------------------------------
 Fa0/2            Root FWD 19        128.2    P2p
-Fa0/4            Desg FWD 19        128.4    P2p
+Fa0/4            Altn BLK 19        128.4    P2p
 ```
 
 
@@ -297,7 +297,7 @@ Fa0/4            Altn BLK 19        128.4    P2p
 Fa0/3            Root FWD 19        128.3    P2p
 ```
 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ2/Конец.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ2/End.png?raw=true)
 
 
 
