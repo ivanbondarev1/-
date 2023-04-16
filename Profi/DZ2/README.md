@@ -297,7 +297,7 @@ Fa0/4            Altn BLK 19        128.4    P2p
 Fa0/3            Root FWD 19        128.3    P2p
 ```
 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ2/End.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ2/End1.png?raw=true)
 
 
 
