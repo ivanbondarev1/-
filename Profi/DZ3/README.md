@@ -656,7 +656,16 @@ R1(config-if)#ipv6 dhcp server R2-STATEFUL
 ![](https://raw.githubusercontent.com/ivanbondarev1/Otus/main/DZ8/PC-B(ipconfig).png)
 
 
+### **Step 2: Configure R2 as a DHCP relay agent for the LAN on G0/0/1.**
 
+```
+R2(config)# interface g0/0/1
+R2(config-if)# ipv6 nd managed-config-flag
+R2(config-if)# ipv6 dhcp relay destination 2001:db8:acad:2::1 g0/0/0
+```
+### **Step 3: Attempt to acquire an IPv6 address from DHCPv6 on PC-B..**
+
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ3/PC2%2028.04.2023%2012_43_44.png?raw=true)
 
 
 
