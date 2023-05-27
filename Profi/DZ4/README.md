@@ -83,6 +83,24 @@ interface Vlan40
 ### SW4:
 
 ```
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 10 priority 0
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
 interface Port-channel1
  switchport trunk encapsulation dot1q
  switchport mode trunk
@@ -106,6 +124,8 @@ interface Ethernet0/3
  channel-group 1 mode active
 !
 interface Ethernet1/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
 !
 interface Ethernet1/1
  switchport trunk encapsulation dot1q
@@ -115,11 +135,9 @@ interface Ethernet1/2
 !
 interface Ethernet1/3
 !
-interface Vlan10
- no ip address
-!
 interface Vlan40
  ip address 192.168.1.1 255.255.255.0
+
 ```
 
 
@@ -209,6 +227,7 @@ interface Ethernet0/1.10
  ip address 77.12.1.1 255.255.255.0
  standby version 2
  standby 10 ip 77.12.1.10
+ standby 10 priority 200
  standby 10 preempt
 !
 interface Ethernet0/1.20
@@ -262,9 +281,7 @@ interface Ethernet2/2
 interface Ethernet2/3
  no ip address
  shutdown
-!
-ip forward-protocol nd
-!
+
 ```
 
 
@@ -284,9 +301,10 @@ interface Ethernet0/0.10
 !
 interface Ethernet0/0.20
  encapsulation dot1Q 20
- ip address 77.12.2.12 255.255.255.0
+ ip address 77.12.11.15 255.255.255.0
  standby version 2
- standby 20 ip 77.12.2.20
+ standby 20 ip 77.12.11.20
+ standby 20 priority 200
  standby 20 preempt
 !
 interface Ethernet0/0.40
@@ -301,10 +319,10 @@ interface Ethernet0/1
  shutdown
 !
 interface Ethernet0/2
- ip address 172.16.4.1 255.255.255.0
+ ip address 77.13.2.1 255.255.255.0
 !
 interface Ethernet0/3
- ip address 192.168.2.1 255.255.255.0
+ ip address 77.13.3.1 255.255.255.0
 !
 interface Ethernet1/0
  no ip address
@@ -321,49 +339,7 @@ interface Ethernet1/2
 interface Ethernet1/3
  no ip address
  shutdown
-```
 
-
-### **Питер**
-
-### SW9:
-
-```
-interface Port-channel1
- switchport trunk encapsulation dot1q
- switchport mode trunk
-!
-interface Ethernet0/0
- switchport trunk encapsulation dot1q
- switchport mode trunk
- channel-group 1 mode active
-!
-interface Ethernet0/1
- switchport trunk encapsulation dot1q
- switchport mode trunk
- channel-group 1 mode active
-!
-interface Ethernet0/2
- switchport access vlan 10
- switchport trunk encapsulation dot1q
- switchport mode trunk
-!
-interface Ethernet0/3
- switchport trunk encapsulation dot1q
- switchport mode trunk
-!
-interface Ethernet1/0
- switchport trunk encapsulation dot1q
- switchport mode trunk
-!
-interface Ethernet1/1
-!
-interface Ethernet1/2
-!
-interface Ethernet1/3
-!
-interface Vlan40
- ip address 172.16.3.1 255.255.255.0
 ```
 
 ### SW10:
