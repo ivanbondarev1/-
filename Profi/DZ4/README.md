@@ -249,38 +249,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  ip address 77.12.3.1 255.255.255.0
-!
-interface Ethernet1/0
- no ip address
- shutdown
-!
-interface Ethernet1/1
- no ip address
- shutdown
-!
-interface Ethernet1/2
- no ip address
- shutdown
-!
-interface Ethernet1/3
- no ip address
- shutdown
-!
-interface Ethernet2/0
- no ip address
- shutdown
-!
-interface Ethernet2/1
- no ip address
- shutdown
-!
-interface Ethernet2/2
- no ip address
- shutdown
-!
-interface Ethernet2/3
- no ip address
- shutdown
+
 
 ```
 
@@ -392,6 +361,7 @@ interface Ethernet0/0.10
  ip address 78.18.2.1 255.255.255.0
  standby version 2
  standby 10 ip 78.18.2.10
+ standby 10 priority 200
  standby 10 preempt
 !
 interface Ethernet0/0.20
@@ -413,10 +383,7 @@ interface Ethernet0/1
 !
 interface Ethernet0/2
  ip address 78.17.2.1 255.255.255.0
-!
-interface Ethernet0/3
- no ip address
- shutdown
+
 ```
 
 ### R16:
@@ -437,6 +404,7 @@ interface Ethernet0/0.20
  ip address 78.18.3.2 255.255.255.0
  standby version 2
  standby 20 ip 78.18.3.20
+ standby 20 priority 200
  standby 20 preempt
 !
 interface Ethernet0/0.40
@@ -454,6 +422,7 @@ interface Ethernet0/2
 !
 interface Ethernet0/3
  ip address 78.16.3.1 255.255.255.0
+
 ```
 
 ### **Чокурдах**
