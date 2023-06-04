@@ -181,8 +181,10 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 14.28.2.0 255.255.255.0 14.26.1.2
-ip route 14.28.3.0 255.255.255.0 14.26.1.2
+ip route 172.16.4.0 255.255.255.192 14.26.1.2
+ip route 172.16.4.64 255.255.255.192 14.26.1.2
+
+
 ```
 
 ### **R25:**
@@ -221,8 +223,9 @@ ip forward-protocol nd
 !
 no ip http server
 no ip http secure-server
-ip route 14.28.2.0 255.255.255.0 14.25.3.2
-ip route 14.28.3.0 255.255.255.0 14.25.3.2
+ip route 172.16.4.0 255.255.255.192 14.26.3.2
+ip route 172.16.4.64 255.255.255.192 14.26.3.2
+
 ```
 
 
