@@ -1,6 +1,6 @@
 # **OSPF**
 ## **Топология** 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ4/TOP.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ6/EVE%20_%20Topology%20-%20Google%20Chrome%2025.06.2023%2020_54_41.png?raw=true)
 
 
 
