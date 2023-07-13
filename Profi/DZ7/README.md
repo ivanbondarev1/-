@@ -1,6 +1,6 @@
 # **IS-IS**
 ## **Топология** 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ6/EVE%20_%20Topology%20-%20Google%20Chrome%2025.06.2023%2020_54_41.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ7/EVE%20_%20Topology%20-%20Google%20Chrome%2013.07.2023%2021_00_01.png?raw=true)
 
 
 
@@ -43,10 +43,12 @@ interface Ethernet0/0
 interface Ethernet0/1
  ip address 10.0.0.1 255.255.255.192
  ip router isis
+ isis circuit-type level-1
 !
 interface Ethernet0/2
  ip address 10.0.0.65 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
  no ip address
@@ -72,6 +74,7 @@ router isis
  net 49.2222.0023.0023.0023.00
 
 ```
+
 ```
 R23#sh ip route isis
 Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
@@ -87,17 +90,18 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 Gateway of last resort is not set
 
       10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
-i L1     10.0.0.128/26 [115/20] via 10.0.0.2, 00:29:11, Ethernet0/1
-i L2     10.0.0.192/26 [115/20] via 10.0.0.66, 00:29:11, Ethernet0/2
-R23#
+i L2     10.0.0.128/26 [115/30] via 10.0.0.66, 00:07:10, Ethernet0/2
+i L2     10.0.0.192/26 [115/20] via 10.0.0.66, 00:11:37, Ethernet0/2
+
 ```
+
 ```
 R23#sh isis neighbors
 
 System Id      Type Interface   IP Address      State Holdtime Circuit Id
-R24            L2   Et0/2       10.0.0.66       UP    9        R24.02           
-R25            L1   Et0/1       10.0.0.2        UP    6        R25.01           
-R25            L2   Et0/1       10.0.0.2        UP    7        R25.01 
+R24            L2   Et0/2       10.0.0.66       UP    8        R24.02           
+R25            L1   Et0/1       10.0.0.2        UP    7        R25.01 
+
 ```
 ### **R25**:
 
@@ -105,6 +109,7 @@ R25            L2   Et0/1       10.0.0.2        UP    7        R25.01
 interface Ethernet0/0
  ip address 10.0.0.2 255.255.255.192
  ip router isis
+ isis circuit-type level-1
 !
 interface Ethernet0/1
  ip address 89.25.1.1 255.255.255.0
@@ -112,6 +117,7 @@ interface Ethernet0/1
 interface Ethernet0/2
  ip address 10.0.0.129 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
  ip address 14.25.3.1 255.255.255.0
@@ -134,6 +140,7 @@ interface Ethernet1/3
 !
 router isis
  net 49.2222.0025.0025.0025.00
+
 ```
 
 ```
@@ -151,19 +158,21 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 Gateway of last resort is not set
 
       10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
-i L1     10.0.0.64/26 [115/20] via 10.0.0.1, 00:30:40, Ethernet0/0
-i L2     10.0.0.192/26 [115/20] via 10.0.0.130, 00:30:40, Ethernet0/2
+i L2     10.0.0.64/26 [115/30] via 10.0.0.130, 00:09:20, Ethernet0/2
+i L2     10.0.0.192/26 [115/20] via 10.0.0.130, 00:14:06, Ethernet0/2
 R25#
 
 ```
+
 ```
 R25#sh isis neighbors
 
 System Id      Type Interface   IP Address      State Holdtime Circuit Id
-R23            L1   Et0/0       10.0.0.1        UP    22       R25.01           
-R23            L2   Et0/0       10.0.0.1        UP    26       R25.01           
-R26            L2   Et0/2       10.0.0.130      UP    9        R26.02 
+R23            L1   Et0/0       10.0.0.1        UP    25       R25.01           
+R26            L2   Et0/2       10.0.0.130      UP    8        R26.02  
+
 ```
+### **R26 находится в зоне 26**
 
 ### **R26**:
 
@@ -171,6 +180,7 @@ R26            L2   Et0/2       10.0.0.130      UP    9        R26.02
 interface Ethernet0/0
  ip address 10.0.0.194 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/1
  ip address 14.26.1.1 255.255.255.0
@@ -178,6 +188,7 @@ interface Ethernet0/1
 interface Ethernet0/2
  ip address 10.0.0.130 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
  ip address 78.26.3.1 255.255.255.0
@@ -200,6 +211,7 @@ interface Ethernet1/3
 !
 router isis
  net 49.0026.0026.0026.0026.00
+
 ```
 
 ```
@@ -217,8 +229,8 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 Gateway of last resort is not set
 
       10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
-i L2     10.0.0.0/26 [115/20] via 10.0.0.129, 00:37:43, Ethernet0/2
-i L2     10.0.0.64/26 [115/20] via 10.0.0.193, 00:37:43, Ethernet0/0
+i L2     10.0.0.0/26 [115/20] via 10.0.0.129, 00:17:16, Ethernet0/2
+i L2     10.0.0.64/26 [115/20] via 10.0.0.193, 00:17:16, Ethernet0/0
 
 ```
 
@@ -226,10 +238,11 @@ i L2     10.0.0.64/26 [115/20] via 10.0.0.193, 00:37:43, Ethernet0/0
 R26#sh isis neighbors
 
 System Id      Type Interface   IP Address      State Holdtime Circuit Id
-R24            L2   Et0/0       10.0.0.193      UP    22       R26.01           
-R25            L2   Et0/2       10.0.0.129      UP    23       R26.02  
+R24            L2   Et0/0       10.0.0.193      UP    23       R26.01           
+R25            L2   Et0/2       10.0.0.129      UP    23       R26.02
 ```
 
+### **R24 находится в зоне 24.**
 
 ### **R24**:
 
@@ -240,10 +253,12 @@ interface Ethernet0/0
 interface Ethernet0/1
  ip address 10.0.0.193 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/2
  ip address 10.0.0.66 255.255.255.192
  ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
  ip address 78.24.3.1 255.255.255.0
@@ -267,6 +282,7 @@ interface Ethernet1/3
 router isis
  net 49.0024.0024.0024.0024.00
 
+
 ```
 
 ```
@@ -284,16 +300,17 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 Gateway of last resort is not set
 
       10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
-i L2     10.0.0.0/26 [115/20] via 10.0.0.65, 00:06:35, Ethernet0/2
-i L2     10.0.0.128/26 [115/20] via 10.0.0.194, 00:39:38, Ethernet0/1
+i L2     10.0.0.0/26 [115/20] via 10.0.0.65, 00:19:45, Ethernet0/2
+i L2     10.0.0.128/26 [115/20] via 10.0.0.194, 00:14:10, Ethernet0/1
+
 ```
 
 ```
 R24#sh isis neighbors
 
 System Id      Type Interface   IP Address      State Holdtime Circuit Id
-R23            L2   Et0/2       10.0.0.65       UP    28       R24.02           
-R26            L2   Et0/1       10.0.0.194      UP    7        R26.01  
+R23            L2   Et0/2       10.0.0.65       UP    27       R24.02           
+R26            L2   Et0/1       10.0.0.194      UP    7        R26.01 
 ```
 
 
