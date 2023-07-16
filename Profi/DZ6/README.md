@@ -1,15 +1,15 @@
-# **OSPF**
+# **EIGRP**
 ## **Топология** 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ6/1.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ8/EVE%20_%20Topology%20-%20Google%20Chrome%2015.07.2023%2012_12_43.png?raw=true)
 
 
 
 ## **Задачи:**
-+ ### Маршрутизаторы R14-R15 находятся в зоне 0 - backbone.
-+ ### Маршрутизаторы R12-R13 находятся в зоне 10. Дополнительно к маршрутам должны получать маршрут по умолчанию.
-+ ### Маршрутизатор R19 находится в зоне 101 и получает только маршрут по умолчанию.
-+ ### Маршрутизатор R20 находится в зоне 102 и получает все маршруты, кроме маршрутов до сетей зоны 101.
-+ ### Настройка для IPv6 повторяет логику IPv4.
++ ### В офисе С.-Петербург настроить EIGRP.
++ ### R32 получает только маршрут по умолчанию.
++ ### R16-17 анонсируют только суммарные префиксы.
++ ### Использовать EIGRP named-mode для настройки сети. Настройка осуществляется одновременно для IPv4 и IPv6.
+
 
 
 ## **Решение**
@@ -18,265 +18,303 @@
 ## Адресное пространство:
 
 
-### **Москва**
+### **С.-Петербург**
 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ6/ADR.xlsx%20-%20Excel%2019.06.2023%2011_52_44.png?raw=true)
+![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ8/ADR.xlsx%20-%20Excel%20(Нелицензированный%20продукт)%2015.07.2023%2012_16_17.png?raw=true)
 
-![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ6/R19.png?raw=true)
+
 
 
 ## Настройки:
 
-### **Москва:**
+### **С.-Петербург:**
 
 
-### **Подключение между R19-R14 я обозначил как p2p т.к. они соденины на прямую и зоне 101 нет никого кроме них, поэтому нет необходимости в выборах DR и BDR.(С R20-R15 точно так же)**
+### **R23 и R25 находятся в зоне 2222**
 
 
-### **R14:**
+
+
+### **R23:**
 ```
 interface Ethernet0/0
- ip address 192.168.0.18 255.255.255.240
- ip ospf 1 area 0
+ ip address 101.22.2.2 255.255.255.0
 !
 interface Ethernet0/1
- ip address 192.168.0.68 255.255.255.240
- ip ospf 1 area 0
+ ip address 10.0.0.1 255.255.255.192
+ ip router isis
+ isis circuit-type level-1
 !
 interface Ethernet0/2
- ip address 77.14.2.1 255.255.255.0
-!
-interface Ethernet0/3
- ip address 192.168.0.81 255.255.255.240
- ip ospf network point-to-point
- ip ospf 1 area 101
-!
-interface Ethernet1/0
- ip address 192.168.0.178 255.255.255.240
- ip ospf 1 area 0
-!
-router ospf 1
- router-id 14.14.14.14
- area 101 stub no-summary
-
-
-```
-### **R19**:
-
-```
-interface Ethernet0/0
- ip address 192.168.0.82 255.255.255.240
- ip ospf 1 area 101
-!
-router ospf 1
- router-id 19.19.19.19
- area 101 stub
-```
-
-### **R15**:
-
-```
-interface Ethernet0/0
- ip address 192.168.0.98 255.255.255.240
- ip ospf 1 area 0
-!
-interface Ethernet0/1
- ip address 192.168.0.34 255.255.255.240
- ip ospf 1 area 0
-!
-interface Ethernet0/2
- ip address 77.15.2.1 255.255.255.0
-!
-interface Ethernet0/3
- ip address 192.168.0.113 255.255.255.240
- ip ospf network point-to-point
- ip ospf 1 area 102
-!
-interface Ethernet1/0
- ip address 192.168.0.177 255.255.255.240
- ip ospf 1 area 0
-!
-router ospf 1
- router-id 15.15.15.15
- priority 120
- area 102 filter-list prefix 102 in
-!
-ip prefix-list 102 seq 5 deny 192.168.0.80/28
-ip prefix-list 102 seq 10 permit 0.0.0.0/0 le 32
-!
-!
-```
-
-
-
-### **R20**:
-
-```
-interface Ethernet0/0
- ip address 192.168.0.114 255.255.255.240
- ip ospf network point-to-point
- ip ospf 1 area 102
-!
-interface Ethernet0/1
- no ip address
- shutdown
-!
-interface Ethernet0/2
- no ip address
- shutdown
+ ip address 10.0.0.65 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
  no ip address
  shutdown
 !
-router ospf 1
- router-id 20.20.20.20
-```
-### **R20(ip route):**
-
-```
-      192.168.0.0/24 is variably subnetted, 12 subnets, 2 masks
-O IA     192.168.0.0/28 [110/30] via 192.168.0.113, 01:03:58, Ethernet0/0
-O IA     192.168.0.16/28 [110/30] via 192.168.0.113, 01:16:20, Ethernet0/0
-O IA     192.168.0.32/28 [110/20] via 192.168.0.113, 01:16:20, Ethernet0/0
-O IA     192.168.0.48/28 [110/30] via 192.168.0.113, 01:04:03, Ethernet0/0
-O IA     192.168.0.64/28 [110/30] via 192.168.0.113, 01:03:58, Ethernet0/0
-O IA     192.168.0.96/28 [110/20] via 192.168.0.113, 01:16:20, Ethernet0/0
-C        192.168.0.112/28 is directly connected, Ethernet0/0
-L        192.168.0.114/32 is directly connected, Ethernet0/0
-O IA     192.168.0.128/28 [110/31] via 192.168.0.113, 00:40:34, Ethernet0/0
-O IA     192.168.0.144/28 [110/31] via 192.168.0.113, 00:39:46, Ethernet0/0
-O IA     192.168.0.160/28 [110/30] via 192.168.0.113, 01:04:03, Ethernet0/0
-O IA     192.168.0.176/28 [110/20] via 192.168.0.113, 01:16:20, Ethernet0/0
-```
-### **R19**:
-
-```
-interface Ethernet0/0
- ip address 192.168.0.82 255.255.255.240
- ip ospf 1 area 101
+interface Ethernet1/0
+ no ip address
+ shutdown
 !
-router ospf 1
- router-id 19.19.19.19
- area 101 stub
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router isis
+ net 49.2222.0023.0023.0023.00
+
 ```
 
-### SW4 и SW5 я так же поместил в зону 10 вместе с R12-R13, т.к. они были заменены на l3 коммутаторы и настроены соотвествующе 
+```
+R23#sh ip route isis
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
 
+Gateway of last resort is not set
 
-### **R12:**
+      10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+i L2     10.0.0.128/26 [115/30] via 10.0.0.66, 00:07:10, Ethernet0/2
+i L2     10.0.0.192/26 [115/20] via 10.0.0.66, 00:11:37, Ethernet0/2
+
+```
+
+```
+R23#sh isis neighbors
+
+System Id      Type Interface   IP Address      State Holdtime Circuit Id
+R24            L2   Et0/2       10.0.0.66       UP    8        R24.02           
+R25            L1   Et0/1       10.0.0.2        UP    7        R25.01 
+
+```
+### **R25**:
 
 ```
 interface Ethernet0/0
- ip address 192.168.0.50 255.255.255.240
- ip ospf 1 area 10
+ ip address 10.0.0.2 255.255.255.192
+ ip router isis
+ isis circuit-type level-1
 !
 interface Ethernet0/1
- ip address 192.168.0.1 255.255.255.240
- ip ospf 1 area 10
+ ip address 89.25.1.1 255.255.255.0
 !
 interface Ethernet0/2
- ip address 192.168.0.17 255.255.255.240
- ip ospf 1 area 0
+ ip address 10.0.0.129 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
- ip address 192.168.0.33 255.255.255.240
- ip ospf 1 area 0
-!
-router ospf 1
- router-id 12.12.12.12
- area 10 stub
-```
-
-
-### **SW4:**
-
-```
+ ip address 14.25.3.1 255.255.255.0
 !
 interface Ethernet1/0
- no switchport
- ip address 192.168.0.2 255.255.255.240
- ip ospf 1 area 10
- duplex auto
+ no ip address
+ shutdown
 !
-interface Vlan10
- ip address 192.168.0.130 255.255.255.240
- standby version 2
- standby 10 ip 192.168.0.129
- standby 10 priority 200
- standby 10 preempt
- ip ospf 1 area 10
+interface Ethernet1/1
+ no ip address
+ shutdown
 !
-interface Vlan20
- ip address 192.168.0.146 255.255.255.240
- standby version 2
- standby 20 ip 192.168.0.145
- standby 20 preempt
- ip ospf 1 area 10
+interface Ethernet1/2
+ no ip address
+ shutdown
 !
-interface Vlan40
- ip address 192.168.1.1 255.255.255.0
+interface Ethernet1/3
+ no ip address
+ shutdown
 !
-router ospf 1
- router-id 4.4.4.4
- area 10 stub
- ```
+router isis
+ net 49.2222.0025.0025.0025.00
 
-### **R13:**
+```
+
+```
+R25#sh ip route isis
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+i L2     10.0.0.64/26 [115/30] via 10.0.0.130, 00:09:20, Ethernet0/2
+i L2     10.0.0.192/26 [115/20] via 10.0.0.130, 00:14:06, Ethernet0/2
+R25#
+
+```
+
+```
+R25#sh isis neighbors
+
+System Id      Type Interface   IP Address      State Holdtime Circuit Id
+R23            L1   Et0/0       10.0.0.1        UP    25       R25.01           
+R26            L2   Et0/2       10.0.0.130      UP    8        R26.02  
+
+```
+### **R26 находится в зоне 26**
+
+### **R26**:
 
 ```
 interface Ethernet0/0
- ip address 192.168.0.162 255.255.255.240
- ip ospf 1 area 10
+ ip address 10.0.0.194 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/1
- ip address 192.168.0.49 255.255.255.240
- ip ospf 1 area 10
+ ip address 14.26.1.1 255.255.255.0
 !
 interface Ethernet0/2
- ip address 192.168.0.97 255.255.255.240
- ip ospf 1 area 0
+ ip address 10.0.0.130 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
 !
 interface Ethernet0/3
- ip address 192.168.0.65 255.255.255.240
- ip ospf 1 area 0
+ ip address 78.26.3.1 255.255.255.0
 !
-router ospf 1
- router-id 13.13.13.13
- area 10 stub
- ```
-
-### **SW5:**
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router isis
+ net 49.0026.0026.0026.0026.00
 
 ```
+
+```
+R26#sh ip route isis
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+i L2     10.0.0.0/26 [115/20] via 10.0.0.129, 00:17:16, Ethernet0/2
+i L2     10.0.0.64/26 [115/20] via 10.0.0.193, 00:17:16, Ethernet0/0
+
+```
+
+```
+R26#sh isis neighbors
+
+System Id      Type Interface   IP Address      State Holdtime Circuit Id
+R24            L2   Et0/0       10.0.0.193      UP    23       R26.01           
+R25            L2   Et0/2       10.0.0.129      UP    23       R26.02
+```
+
+### **R24 находится в зоне 24.**
+
+### **R24**:
+
+```
+interface Ethernet0/0
+ ip address 101.21.2.2 255.255.255.0
+!
+interface Ethernet0/1
+ ip address 10.0.0.193 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
+!
+interface Ethernet0/2
+ ip address 10.0.0.66 255.255.255.192
+ ip router isis
+ isis circuit-type level-2-only
+!
+interface Ethernet0/3
+ ip address 78.24.3.1 255.255.255.0
+!
 interface Ethernet1/0
- no switchport
- ip address 192.168.0.161 255.255.255.240
- ip ospf 1 area 10
- duplex auto
+ no ip address
+ shutdown
 !
-interface Vlan10
- ip address 192.168.0.131 255.255.255.240
- standby version 2
- standby 10 ip 192.168.0.129
- standby 10 preempt
- ip ospf 1 area 10
+interface Ethernet1/1
+ no ip address
+ shutdown
 !
-interface Vlan20
- ip address 192.168.0.147 255.255.255.240
- standby version 2
- standby 20 ip 192.168.0.145
- standby 20 priority 200
- standby 20 preempt
- ip ospf 1 area 10
+interface Ethernet1/2
+ no ip address
+ shutdown
 !
-interface Vlan40
- ip address 192.168.1.2 255.255.255.0
+interface Ethernet1/3
+ no ip address
+ shutdown
 !
-router ospf 1
- router-id 5.5.5.5
- area 10 stub
- ```
+router isis
+ net 49.0024.0024.0024.0024.00
+
+
+```
+
+```
+R24#sh ip route isis
+Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
+       D - EIGRP, EX - EIGRP external, O - OSPF, IA - OSPF inter area
+       N1 - OSPF NSSA external type 1, N2 - OSPF NSSA external type 2
+       E1 - OSPF external type 1, E2 - OSPF external type 2
+       i - IS-IS, su - IS-IS summary, L1 - IS-IS level-1, L2 - IS-IS level-2
+       ia - IS-IS inter area, * - candidate default, U - per-user static route
+       o - ODR, P - periodic downloaded static route, H - NHRP, l - LISP
+       a - application route
+       + - replicated route, % - next hop override
+
+Gateway of last resort is not set
+
+      10.0.0.0/8 is variably subnetted, 6 subnets, 2 masks
+i L2     10.0.0.0/26 [115/20] via 10.0.0.65, 00:19:45, Ethernet0/2
+i L2     10.0.0.128/26 [115/20] via 10.0.0.194, 00:14:10, Ethernet0/1
+
+```
+
+```
+R24#sh isis neighbors
+
+System Id      Type Interface   IP Address      State Holdtime Circuit Id
+R23            L2   Et0/2       10.0.0.65       UP    27       R24.02           
+R26            L2   Et0/1       10.0.0.194      UP    7        R26.01 
+```
+
+
+
 
 
 
