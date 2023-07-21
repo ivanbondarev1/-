@@ -1,4 +1,4 @@
-# **EIGRP**
+# **BGP**
 ## **Топология** 
 ![](https://github.com/ivanbondarev1/Otus/blob/main/Profi/DZ9/EVE%20_%20Topology%20-%20Google%20Chrome%2021.07.2023%2011_42_48.png?raw=true)
 
