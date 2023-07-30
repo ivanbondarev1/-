@@ -81,17 +81,19 @@ router bgp 1001
  bgp router-id 14.14.14.14
  bgp log-neighbor-changes
  network 77.14.2.0 mask 255.255.255.0
- network 192.168.0.176 mask 255.255.255.240
  neighbor 77.14.2.2 remote-as 101
  neighbor 150.150.150.150 remote-as 1001
  neighbor 150.150.150.150 update-source Loopback0
+ neighbor 150.150.150.150 next-hop-self
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
-ip route 0.0.0.0 0.0.0.0 Loopback0
+ip route 0.0.0.0 0.0.0.0 Null0
+ip route 192.168.0.0 255.255.0.0 Null0
+
 
 
 ```
@@ -110,16 +112,22 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 
 Gateway of last resort is 0.0.0.0 to network 0.0.0.0
 
+      10.0.0.0/26 is subnetted, 4 subnets
+B        10.0.0.0 [200/0] via 150.150.150.150, 00:03:46
+B        10.0.0.64 [200/0] via 150.150.150.150, 00:03:46
+B        10.0.0.128 [200/0] via 150.150.150.150, 00:03:46
+B        10.0.0.192 [200/0] via 150.150.150.150, 00:03:46
       77.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
-B        77.15.2.0/24 [20/0] via 77.14.2.2, 00:27:26
+B        77.15.2.0/24 [200/0] via 150.150.150.150, 00:03:46
       78.0.0.0/24 is subnetted, 2 subnets
-B        78.24.3.0 [20/0] via 77.14.2.2, 00:27:26
-B        78.26.3.0 [20/0] via 77.14.2.2, 00:26:56
+B        78.24.3.0 [200/0] via 150.150.150.150, 00:03:46
+B        78.26.3.0 [200/0] via 150.150.150.150, 00:03:30
       100.0.0.0/24 is subnetted, 1 subnets
-B        100.22.1.0 [20/0] via 77.14.2.2, 00:27:26
+B        100.22.1.0 [200/0] via 150.150.150.150, 00:03:46
       101.0.0.0/24 is subnetted, 2 subnets
-B        101.21.2.0 [20/0] via 77.14.2.2, 00:27:26
-B        101.22.2.0 [20/0] via 77.14.2.2, 00:27:26
+B        101.21.2.0 [200/0] via 150.150.150.150, 00:03:46
+B        101.22.2.0 [200/0] via 150.150.150.150, 00:03:30
+
 
 ```
 
@@ -133,58 +141,34 @@ Origin codes: i - IGP, e - EGP, ? - incomplete
 RPKI validation codes: V valid, I invalid, N Not found
 
      Network          Next Hop            Metric LocPrf Weight Path
- *>i 10.0.0.0/26      77.15.2.2                0    200      0 301 520 i
+ *>i 10.0.0.0/26      150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- *>i 10.0.0.64/26     77.15.2.2                0    200      0 301 520 i
+ *>i 10.0.0.64/26     150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- *>i 10.0.0.128/26    77.15.2.2                0    200      0 301 520 i
+ *>i 10.0.0.128/26    150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- *>i 10.0.0.192/26    77.15.2.2                0    200      0 301 520 i
+ *>i 10.0.0.192/26    150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- * i 77.14.2.0/24     77.15.2.2                0    200      0 301 101 i
+ * i 77.14.2.0/24     150.150.150.150          0    200      0 301 101 i
  *>                   0.0.0.0                  0         32768 i
  *                    77.14.2.2                0             0 101 i
- *   77.15.2.0/24     77.14.2.2                              0 101 301 i
- *>i                  150.150.150.150          0    100      0 i
- *>i 78.24.3.0/24     77.15.2.2                0    200      0 301 520 i
+ *>i 77.15.2.0/24     150.150.150.150          0    100      0 i
+ *                    77.14.2.2                              0 101 301 i
+ *>i 78.24.3.0/24     150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- *>i 78.26.3.0/24     77.15.2.2                0    200      0 301 520 i
+ *>i 78.26.3.0/24     150.150.150.150          0    200      0 301 520 i
  *                    77.14.2.2                              0 101 520 i
- *>i 100.22.1.0/24    77.15.2.2                0    200      0 301 i
+ *>i 100.22.1.0/24    150.150.150.150          0    200      0 301 i
  *                    77.14.2.2                0             0 101 i
- *>i 101.21.2.0/24    77.15.2.2                0    200      0 301 i
- *                    77.14.2.2                              0 101 520 i
- *>i 101.22.2.0/24    77.15.2.2                0    200      0 301 101 i
+ *>i 101.21.2.0/24    150.150.150.150          0    200      0 301 i
+ *                    77.14.2.2                              0 101 301 i
+ *>i 101.22.2.0/24    150.150.150.150          0    200      0 301 101 i
  *                    77.14.2.2                0             0 101 i
- * i 192.168.0.176/28 150.150.150.150          0    100      0 i
- *>                   0.0.0.0                  0         32768 i
-R14#
+
 
 ```
 
-```
-R14#sh ip bgp
-BGP table version is 10, local router ID is 14.14.14.14
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-              x best-external, a additional-path, c RIB-compressed,
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
 
-     Network          Next Hop            Metric LocPrf Weight Path
- *>  77.14.2.0/24     0.0.0.0                  0         32768 i
- *                    77.14.2.2                0             0 101 i
- *>  77.15.2.0/24     77.14.2.2                              0 101 301 i
- *>  78.24.3.0/24     77.14.2.2                              0 101 301 520 i
- *>  78.26.3.0/24     77.14.2.2                              0 101 301 520 2042 i
- *>  100.22.1.0/24    77.14.2.2                0             0 101 i
- *>  101.21.2.0/24    77.14.2.2                              0 101 301 i
- *>  101.22.2.0/24    77.14.2.2                0             0 101 i
- *>  140.140.140.140/32
-                       0.0.0.0                  0         32768 i
-      L1   Et0/1       10.0.0.2        UP    7        R25.01 
-
-```
 ### **R15**:
 
 ```
@@ -234,25 +218,23 @@ router bgp 1001
  bgp router-id 15.15.15.15
  bgp log-neighbor-changes
  network 77.15.2.0 mask 255.255.255.0
- network 192.168.0.176 mask 255.255.255.240
  neighbor 77.15.2.2 remote-as 301
  neighbor 77.15.2.2 route-map lamas in
  neighbor 140.140.140.140 remote-as 1001
  neighbor 140.140.140.140 update-source Loopback0
+ neighbor 140.140.140.140 next-hop-self
 !
 ip forward-protocol nd
 !
 !
 no ip http server
 no ip http secure-server
+ip route 0.0.0.0 0.0.0.0 Null0
 !
 !
 ip prefix-list 102 seq 5 deny 192.168.0.80/28
 ip prefix-list 102 seq 10 permit 0.0.0.0/0 le 32
-!
-route-map lamas permit 10
- set local-preference 200
-!
+
 
 
 ```
@@ -269,24 +251,23 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
        a - application route
        + - replicated route, % - next hop override
 
-Gateway of last resort is 192.168.0.178 to network 0.0.0.0
+Gateway of last resort is 0.0.0.0 to network 0.0.0.0
 
       10.0.0.0/26 is subnetted, 4 subnets
-B        10.0.0.0 [20/0] via 77.15.2.2, 00:30:10
-B        10.0.0.64 [20/0] via 77.15.2.2, 00:30:10
-B        10.0.0.128 [20/0] via 77.15.2.2, 00:30:10
-B        10.0.0.192 [20/0] via 77.15.2.2, 00:30:10
+B        10.0.0.0 [20/0] via 77.15.2.2, 00:07:54
+B        10.0.0.64 [20/0] via 77.15.2.2, 00:07:54
+B        10.0.0.128 [20/0] via 77.15.2.2, 00:07:54
+B        10.0.0.192 [20/0] via 77.15.2.2, 00:07:54
       77.0.0.0/8 is variably subnetted, 3 subnets, 2 masks
-B        77.14.2.0/24 [20/0] via 77.15.2.2, 00:30:10
+B        77.14.2.0/24 [20/0] via 77.15.2.2, 00:07:37
       78.0.0.0/24 is subnetted, 2 subnets
-B        78.24.3.0 [20/0] via 77.15.2.2, 00:30:10
-B        78.26.3.0 [20/0] via 77.15.2.2, 00:29:57
+B        78.24.3.0 [20/0] via 77.15.2.2, 00:07:54
+B        78.26.3.0 [20/0] via 77.15.2.2, 00:07:37
       100.0.0.0/24 is subnetted, 1 subnets
-B        100.22.1.0 [20/0] via 77.15.2.2, 00:30:10
+B        100.22.1.0 [20/0] via 77.15.2.2, 00:07:54
       101.0.0.0/24 is subnetted, 2 subnets
-B        101.21.2.0 [20/0] via 77.15.2.2, 00:30:10
-B        101.22.2.0 [20/0] via 77.15.2.2, 00:30:10
-R15#
+B        101.21.2.0 [20/0] via 77.15.2.2, 00:07:54
+B        101.22.2.0 [20/0] via 77.15.2.2, 00:07:37
 
 ```
 
@@ -342,11 +323,14 @@ router bgp 520
  neighbor 23.23.23.23 remote-as 520
  neighbor 23.23.23.23 update-source Loopback0
  neighbor 23.23.23.23 route-reflector-client
+ neighbor 23.23.23.23 next-hop-self
  neighbor 24.24.24.24 remote-as 520
  neighbor 24.24.24.24 update-source Loopback0
  neighbor 24.24.24.24 route-reflector-client
+ neighbor 24.24.24.24 next-hop-self
  neighbor 26.26.26.26 remote-as 520
  neighbor 26.26.26.26 update-source Loopback0
+ neighbor 26.26.26.26 next-hop-self
 !
 ip forward-protocol nd
 !
@@ -355,6 +339,7 @@ no ip http server
 no ip http secure-server
 ip route 14.28.2.0 255.255.255.0 14.25.3.2
 ip route 14.28.3.0 255.255.255.0 14.25.3.2
+
 
 ```
 
@@ -386,9 +371,9 @@ Routing Protocol is "isis"
     Ethernet0/2
   Routing Information Sources:
     Gateway         Distance      Last Update
-    24.24.24.24          115      00:08:11
-    26.26.26.26          115      00:08:11
-    23.23.23.23          115      00:08:11
+    23.23.23.23          115      00:10:46
+    24.24.24.24          115      00:10:46
+    26.26.26.26          115      00:10:46
   Distance: (default is 115)
 
 Routing Protocol is "bgp 520"
@@ -405,10 +390,11 @@ Routing Protocol is "bgp 520"
   Maximum path: 1
   Routing Information Sources:
     Gateway         Distance      Last Update
-    26.26.26.26          200      00:37:02
-    23.23.23.23          200      00:36:24
-    24.24.24.24          200      00:36:19
+    26.26.26.26          200      00:09:49
+    24.24.24.24          200      00:09:42
+    23.23.23.23          200      00:09:38
   Distance: external 20 internal 200 local 200
+
 
 
 ```
@@ -471,14 +457,7 @@ router bgp 520
  neighbor 25.25.25.25 remote-as 520
  neighbor 25.25.25.25 update-source Loopback0
  neighbor 78.26.3.2 remote-as 2042
-!
-ip forward-protocol nd
-!
-!
-no ip http server
-no ip http secure-server
-ip route 14.28.2.0 255.255.255.0 14.26.1.2
-ip route 14.28.3.0 255.255.255.0 14.26.1.2
+
 
 ```
 
@@ -510,9 +489,9 @@ Routing Protocol is "isis"
     Ethernet0/2
   Routing Information Sources:
     Gateway         Distance      Last Update
-    23.23.23.23          115      00:13:17
-    24.24.24.24          115      00:13:17
-    25.25.25.25          115      00:13:17
+    23.23.23.23          115      00:12:43
+    24.24.24.24          115      00:12:48
+    25.25.25.25          115      00:12:43
   Distance: (default is 115)
 
 Routing Protocol is "bgp 520"
@@ -530,11 +509,11 @@ Routing Protocol is "bgp 520"
   Maximum path: 1
   Routing Information Sources:
     Gateway         Distance      Last Update
-    24.24.24.24          200      00:41:25
-    25.25.25.25          200      00:42:09
+    23.23.23.23          200      00:11:36
+    24.24.24.24          200      00:11:43
+    25.25.25.25          200      00:11:50
   Distance: external 20 internal 200 local 200
 
-R26#
 
 ```
 
@@ -589,8 +568,10 @@ router bgp 520
  network 101.21.2.0 mask 255.255.255.0
  neighbor 25.25.25.25 remote-as 520
  neighbor 25.25.25.25 update-source Loopback0
+ neighbor 25.25.25.25 next-hop-self
  neighbor 26.26.26.26 remote-as 520
  neighbor 26.26.26.26 update-source Loopback0
+ neighbor 26.26.26.26 next-hop-self
  neighbor 78.24.3.2 remote-as 2042
  neighbor 101.21.2.1 remote-as 301
 
@@ -647,10 +628,12 @@ router bgp 520
  network 10.0.0.64 mask 255.255.255.192
  neighbor 25.25.25.25 remote-as 520
  neighbor 25.25.25.25 update-source Loopback0
+ neighbor 25.25.25.25 next-hop-self
  neighbor 26.26.26.26 remote-as 520
  neighbor 26.26.26.26 update-source Loopback0
+ neighbor 26.26.26.26 next-hop-self
  neighbor 101.22.2.1 remote-as 101
-!
+
 
 ```
 
@@ -745,30 +728,28 @@ Codes: L - local, C - connected, S - static, R - RIP, M - mobile, B - BGP
 Gateway of last resort is 0.0.0.0 to network 0.0.0.0
 
       10.0.0.0/26 is subnetted, 4 subnets
-B        10.0.0.0 [20/0] via 78.26.3.1, 00:51:31
-                  [20/0] via 78.24.3.1, 00:51:31
-B        10.0.0.64 [20/0] via 78.26.3.1, 00:51:31
-                   [20/0] via 78.24.3.1, 00:51:31
-B        10.0.0.128 [20/0] via 78.26.3.1, 00:51:31
-                    [20/0] via 78.24.3.1, 00:51:31
-B        10.0.0.192 [20/0] via 78.26.3.1, 00:51:31
-                    [20/0] via 78.24.3.1, 00:51:31
+B        10.0.0.0 [20/0] via 78.26.3.1, 00:14:40
+                  [20/0] via 78.24.3.1, 00:14:40
+B        10.0.0.64 [20/0] via 78.26.3.1, 00:14:40
+                   [20/0] via 78.24.3.1, 00:14:40
+B        10.0.0.128 [20/0] via 78.26.3.1, 00:14:40
+                    [20/0] via 78.24.3.1, 00:14:40
+B        10.0.0.192 [20/0] via 78.26.3.1, 00:14:40
+                    [20/0] via 78.24.3.1, 00:14:40
       77.0.0.0/24 is subnetted, 2 subnets
-B        77.14.2.0 [20/0] via 78.26.3.1, 00:51:00
-                   [20/0] via 78.24.3.1, 00:51:00
-B        77.15.2.0 [20/0] via 78.26.3.1, 00:51:00
-                   [20/0] via 78.24.3.1, 00:51:00
+B        77.14.2.0 [20/0] via 78.26.3.1, 00:14:10
+                   [20/0] via 78.24.3.1, 00:14:10
+B        77.15.2.0 [20/0] via 78.26.3.1, 00:14:10
+                   [20/0] via 78.24.3.1, 00:14:10
       100.0.0.0/24 is subnetted, 1 subnets
-B        100.22.1.0 [20/0] via 78.26.3.1, 00:51:00
-                    [20/0] via 78.24.3.1, 00:51:00
+B        100.22.1.0 [20/0] via 78.26.3.1, 00:14:10
+                    [20/0] via 78.24.3.1, 00:14:10
       101.0.0.0/24 is subnetted, 2 subnets
-B        101.21.2.0 [20/0] via 78.26.3.1, 00:51:31
-                    [20/0] via 78.24.3.1, 00:51:31
-B        101.22.2.0 [20/0] via 78.24.3.1, 00:50:32
-      192.168.0.0/28 is subnetted, 1 subnets
-B        192.168.0.176 [20/0] via 78.26.3.1, 00:50:29
-                       [20/0] via 78.24.3.1, 00:50:29
-R18#
+B        101.21.2.0 [20/0] via 78.26.3.1, 00:14:40
+                    [20/0] via 78.24.3.1, 00:14:40
+B        101.22.2.0 [20/0] via 78.26.3.1, 00:14:10
+                    [20/0] via 78.24.3.1, 00:14:10
+
 
 ```
 
