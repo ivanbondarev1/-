@@ -465,14 +465,13 @@ router bgp 2042
  network 78.24.3.0 mask 255.255.255.0
  network 78.26.3.0 mask 255.255.255.0
  neighbor 78.24.3.1 remote-as 520
- neighbor 78.24.3.1 route-map transit out
+ neighbor 78.24.3.1 prefix-list 50 out
  neighbor 78.26.3.1 remote-as 520
- neighbor 78.26.3.1 route-map transit out
+ neighbor 78.26.3.1 prefix-list 50 out
  maximum-paths 2
 !
 ip forward-protocol nd
 !
-ip as-path access-list 1 permit ^$
 !
 no ip http server
 no ip http secure-server
@@ -485,10 +484,12 @@ ip route 172.16.0.0 255.255.0.0 Null0
 ip access-list standard SPB
  permit 172.16.0.0 0.0.255.255
 !
-ipv6 route ::/0 Loopback1
 !
-route-map transit permit 5
- match as-path 1
+ip prefix-list 50 seq 5 permit 50.50.50.0/24
+ip prefix-list 50 seq 10 permit 78.24.3.0/24
+ip prefix-list 50 seq 15 permit 78.26.3.0/24
+ipv6 route ::/0 Loopback1
+
 
 ```
 
@@ -534,28 +535,26 @@ B        101.22.2.0 [20/0] via 78.26.3.1, 00:14:11
 ```
 
 ```
-R18#sh ip bgp neighbors 78.24.3.1 ad
-R18#sh ip bgp neighbors 78.24.3.1 advertised-routes
-BGP table version is 13, local router ID is 18.18.18.18
-Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
-              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
-              x best-external, a additional-path, c RIB-compressed,
-Origin codes: i - IGP, e - EGP, ? - incomplete
-RPKI validation codes: V valid, I invalid, N Not found
-
-     Network          Next Hop            Metric LocPrf Weight Path
- *>  50.50.50.0/24    0.0.0.0                  0         32768 i
- *>  78.24.3.0/24     0.0.0.0                  0         32768 i
- *>  78.26.3.0/24     0.0.0.0                  0         32768 i
-
-Total number of prefixes 3
-
-
-```
-
-```
 R18#sh ip bgp neighbors 78.26.3.1 advertised-routes
-BGP table version is 13, local router ID is 18.18.18.18
+BGP table version is 16, local router ID is 18.18.18.18
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+              r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
+              x best-external, a additional-path, c RIB-compressed,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+ *>  50.50.50.0/24    0.0.0.0                  0         32768 i
+ *>  78.24.3.0/24     0.0.0.0                  0         32768 i
+ *>  78.26.3.0/24     0.0.0.0                  0         32768 i
+
+
+
+```
+
+```
+R18#sh ip bgp neighbors 78.24.3.1 advertised-routes
+BGP table version is 16, local router ID is 18.18.18.18
 Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
               r RIB-failure, S Stale, m multipath, b backup-path, f RT-Filter,
               x best-external, a additional-path, c RIB-compressed,
@@ -568,6 +567,7 @@ RPKI validation codes: V valid, I invalid, N Not found
  *>  78.26.3.0/24     0.0.0.0                  0         32768 i
 
 Total number of prefixes 3
+
 
 
 ```
