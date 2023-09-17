@@ -425,6 +425,133 @@ IP address      Client-ID/              Lease expiration        Type       State
 
 ### **SW5**:
 
+```
+ip dhcp excluded-address 192.168.0.130
+ip dhcp excluded-address 192.168.0.129
+ip dhcp excluded-address 192.168.0.146
+ip dhcp excluded-address 192.168.0.145
+ip dhcp excluded-address 192.168.0.131
+ip dhcp excluded-address 192.168.0.147
+!
+ip dhcp pool vlan20
+ network 192.168.0.144 255.255.255.240
+ default-router 192.168.0.145
+!
+!
+no ip domain-lookup
+ip cef
+no ipv6 cef
+!
+!
+!
+spanning-tree mode pvst
+spanning-tree extend system-id
+spanning-tree vlan 10 priority 4096
+spanning-tree vlan 20 priority 0
+!
+vlan internal allocation policy ascending
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Port-channel1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/0
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+!
+interface Ethernet0/2
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet0/3
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ channel-group 1 mode active
+!
+interface Ethernet1/0
+ no switchport
+ ip address 192.168.0.161 255.255.255.240
+ ip ospf 1 area 10
+ duplex auto
+ ntp broadcast client
+!
+interface Ethernet1/1
+!
+interface Ethernet1/2
+!
+interface Ethernet1/3
+!
+interface Vlan10
+ ip address 192.168.0.131 255.255.255.240
+ standby version 2
+ standby 10 ip 192.168.0.129
+ standby 10 preempt
+ ip ospf 1 area 10
+!
+interface Vlan20
+ ip address 192.168.0.147 255.255.255.240
+ standby version 2
+ standby 20 ip 192.168.0.145
+ standby 20 priority 200
+ standby 20 preempt
+ ip ospf 1 area 10
+!
+interface Vlan40
+ ip address 192.168.1.2 255.255.255.0
+ ip ospf 1 area 10
+!
+router ospf 1
+ router-id 5.5.5.5
+ area 10 stub
+ passive-interface Vlan10
+ passive-interface Vlan20
+!
+ip forward-protocol nd
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+!
+ntp update-calendar
+ntp server 12.12.12.12
+ntp server 13.13.13.13
+
+```
+
+
+
+### **SW5**:
+
 
 ```
 SW5#sh ip dhcp binding
