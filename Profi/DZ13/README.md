@@ -282,25 +282,264 @@ R15#
 
 ```
 
-### **SW4**:
+
+### **R12**:
 
 ```
 ip dhcp excluded-address 192.168.0.130
 ip dhcp excluded-address 192.168.0.129
 ip dhcp excluded-address 192.168.0.146
 ip dhcp excluded-address 192.168.0.145
+ip dhcp excluded-address 192.168.0.131
+ip dhcp excluded-address 192.168.0.147
+ip dhcp excluded-address 192.168.0.148
+ip dhcp excluded-address 192.168.0.149
+ip dhcp excluded-address 192.168.0.150
+ip dhcp excluded-address 192.168.0.151
+ip dhcp excluded-address 192.168.0.152
 !
 ip dhcp pool vlan10
  network 192.168.0.128 255.255.255.240
  default-router 192.168.0.129
 !
+ip dhcp pool vlan20
+ network 192.168.0.144 255.255.255.240
+ default-router 192.168.0.145
 !
-no ip domain-lookup
+!
+!
+no ip domain lookup
 ip cef
 no ipv6 cef
 !
+multilink bundle-name authenticated
 !
 !
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 12.12.12.12 255.255.255.255
+ ip ospf 1 area 0
+ ntp broadcast
+!
+interface Ethernet0/0
+ ip address 192.168.0.50 255.255.255.240
+ ip ospf 1 area 10
+ ntp broadcast
+!
+interface Ethernet0/1
+ ip address 192.168.0.1 255.255.255.240
+ ip ospf 1 area 10
+ ntp broadcast
+!
+interface Ethernet0/2
+ ip address 192.168.0.17 255.255.255.240
+ ip ospf 1 area 0
+ ntp broadcast
+!
+interface Ethernet0/3
+ ip address 192.168.0.33 255.255.255.240
+ ip ospf 1 area 0
+ ntp broadcast
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+interface Ethernet2/0
+ no ip address
+ shutdown
+!
+interface Ethernet2/1
+ no ip address
+ shutdown
+!
+interface Ethernet2/2
+ no ip address
+ shutdown
+!
+interface Ethernet2/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 12.12.12.12
+ area 10 stub
+!
+ip forward-protocol nd
+!
+!
+no ip http server
+no ip http secure-server
+!
+!
+!
+!
+control-plane
+!
+!
+!
+!
+!
+!
+!
+!
+line con 0
+ logging synchronous
+line aux 0
+line vty 0 4
+ login
+ transport input none
+!
+ntp source Loopback0
+ntp master 5
+ntp update-calendar
+!
+
+
+```
+
+### **R13**:
+
+```
+ip dhcp excluded-address 192.168.0.130
+ip dhcp excluded-address 192.168.0.129
+ip dhcp excluded-address 192.168.0.146
+ip dhcp excluded-address 192.168.0.145
+ip dhcp excluded-address 192.168.0.131
+ip dhcp excluded-address 192.168.0.147
+ip dhcp excluded-address 192.168.0.132
+ip dhcp excluded-address 192.168.0.133
+ip dhcp excluded-address 192.168.0.134
+ip dhcp excluded-address 192.168.0.135
+ip dhcp excluded-address 192.168.0.136
+!
+ip dhcp pool vlan10
+ network 192.168.0.128 255.255.255.240
+ default-router 192.168.0.129
+!
+ip dhcp pool vlan20
+ network 192.168.0.144 255.255.255.240
+ default-router 192.168.0.145
+!
+!
+!
+no ip domain lookup
+ip cef
+no ipv6 cef
+!
+multilink bundle-name authenticated
+!
+!
+!
+!
+!
+!
+!
+!
+!
+redundancy
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+!
+interface Loopback0
+ ip address 13.13.13.13 255.255.255.255
+ ip ospf 1 area 0
+ ntp broadcast client
+!
+interface Ethernet0/0
+ ip address 192.168.0.162 255.255.255.240
+ ip ospf 1 area 10
+ ntp broadcast
+!
+interface Ethernet0/1
+ ip address 192.168.0.49 255.255.255.240
+ ip ospf 1 area 10
+ ntp broadcast
+!
+interface Ethernet0/2
+ ip address 192.168.0.97 255.255.255.240
+ ip ospf 1 area 0
+ ntp broadcast
+!
+interface Ethernet0/3
+ ip address 192.168.0.65 255.255.255.240
+ ip ospf 1 area 0
+ ntp broadcast
+!
+interface Ethernet1/0
+ no ip address
+ shutdown
+!
+interface Ethernet1/1
+ no ip address
+ shutdown
+!
+interface Ethernet1/2
+ no ip address
+ shutdown
+!
+interface Ethernet1/3
+ no ip address
+ shutdown
+!
+router ospf 1
+ router-id 13.13.13.13
+ area 10 stub
+
+
+
+
+```
+
+### **SW4**:
+
+```
 spanning-tree mode pvst
 spanning-tree extend system-id
 spanning-tree vlan 10 priority 0
@@ -363,6 +602,8 @@ interface Ethernet1/3
 !
 interface Vlan10
  ip address 192.168.0.130 255.255.255.240
+ ip helper-address 13.13.13.13
+ ip helper-address 12.12.12.12
  standby version 2
  standby 10 ip 192.168.0.129
  standby 10 priority 200
@@ -371,6 +612,8 @@ interface Vlan10
 !
 interface Vlan20
  ip address 192.168.0.146 255.255.255.240
+ ip helper-address 12.12.12.12
+ ip helper-address 13.13.13.13
  standby version 2
  standby 20 ip 192.168.0.145
  standby 20 preempt
@@ -412,38 +655,11 @@ ntp server 12.12.12.12
 
 ```
 
-```
-SW4#sh ip dhcp binding
-Bindings from all pools not associated with VRF:
-IP address      Client-ID/              Lease expiration        Type       State      Interface
-                Hardware address/
-                User name
-192.168.0.132   0100.5079.6668.01       Sep 18 2023 06:46 AM    Automatic  Active     Vlan10
 
-
-```
 
 ### **SW5**:
 
 ```
-ip dhcp excluded-address 192.168.0.130
-ip dhcp excluded-address 192.168.0.129
-ip dhcp excluded-address 192.168.0.146
-ip dhcp excluded-address 192.168.0.145
-ip dhcp excluded-address 192.168.0.131
-ip dhcp excluded-address 192.168.0.147
-!
-ip dhcp pool vlan20
- network 192.168.0.144 255.255.255.240
- default-router 192.168.0.145
-!
-!
-no ip domain-lookup
-ip cef
-no ipv6 cef
-!
-!
-!
 spanning-tree mode pvst
 spanning-tree extend system-id
 spanning-tree vlan 10 priority 4096
@@ -500,6 +716,8 @@ interface Ethernet1/3
 !
 interface Vlan10
  ip address 192.168.0.131 255.255.255.240
+ ip helper-address 13.13.13.13
+ ip helper-address 12.12.12.12
  standby version 2
  standby 10 ip 192.168.0.129
  standby 10 preempt
@@ -507,6 +725,8 @@ interface Vlan10
 !
 interface Vlan20
  ip address 192.168.0.147 255.255.255.240
+ ip helper-address 12.12.12.12
+ ip helper-address 13.13.13.13
  standby version 2
  standby 20 ip 192.168.0.145
  standby 20 priority 200
@@ -548,19 +768,21 @@ ntp server 13.13.13.13
 
 ```
 
+### **R18**:
 
-
-### **SW5**:
-
+### **VPC1**:
 
 ```
-SW5#sh ip dhcp binding
-Bindings from all pools not associated with VRF:
-IP address      Client-ID/              Lease expiration        Type       State      Interface
-                Hardware address/
-                User name
-192.168.0.148   0100.5079.6668.07       Sep 18 2023 06:46 AM    Automatic  Active     Vlan20
+VPCS> ip dhcp
+DDORA IP 192.168.0.137/28 GW 192.168.0.129
 
+```
+
+### **VPC2**:
+
+```
+VPCS> ip dhcp
+DDORA IP 192.168.0.148/28 GW 192.168.0.145
 
 ```
 
@@ -810,7 +1032,6 @@ route-map VLAN10 deny 10
 route-map VLAN10 permit 20
  match ip address VLAN10-EX
  set ip next-hop verify-availability 14.26.1.1 10 track 10
- set ip next-hop verify-availability 14.25.3.1 20 track 20
 !
 route-map VLAN20 deny 10
  match ip address VLAN10
@@ -818,14 +1039,21 @@ route-map VLAN20 deny 10
 route-map VLAN20 permit 20
  match ip address VLAN20-EX
  set ip next-hop verify-availability 14.25.3.1 10 track 20
- set ip next-hop verify-availability 14.26.1.1 20 track 10
 !
 route-map PAT10 permit 10
  match ip address VLAN10
  match interface Ethernet0/0
 !
+route-map PAT10 permit 20
+ match ip address VLAN20
+ match interface Ethernet0/0
+!
 route-map PAT20 permit 10
  match ip address VLAN20
+ match interface Ethernet0/1
+!
+route-map PAT20 permit 20
+ match ip address VLAN10
  match interface Ethernet0/1
 
 
