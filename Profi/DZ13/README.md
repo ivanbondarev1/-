@@ -286,17 +286,10 @@ R15#
 ### **R12**:
 
 ```
-ip dhcp excluded-address 192.168.0.130
-ip dhcp excluded-address 192.168.0.129
-ip dhcp excluded-address 192.168.0.146
-ip dhcp excluded-address 192.168.0.145
-ip dhcp excluded-address 192.168.0.131
-ip dhcp excluded-address 192.168.0.147
-ip dhcp excluded-address 192.168.0.148
-ip dhcp excluded-address 192.168.0.149
-ip dhcp excluded-address 192.168.0.150
-ip dhcp excluded-address 192.168.0.151
-ip dhcp excluded-address 192.168.0.152
+
+!
+ip dhcp excluded-address 192.168.0.129 192.168.0.131
+ip dhcp excluded-address 192.168.0.146 192.168.0.152
 !
 ip dhcp pool vlan10
  network 192.168.0.128 255.255.255.240
@@ -428,6 +421,7 @@ ntp source Loopback0
 ntp master 5
 ntp update-calendar
 !
+
 
 
 ```
@@ -1026,35 +1020,21 @@ ip sla 20
  frequency 5
 ip sla schedule 20 life forever start-time now
 !
-route-map VLAN10 deny 10
- match ip address VLAN20
-!
 route-map VLAN10 permit 20
  match ip address VLAN10-EX
  set ip next-hop verify-availability 14.26.1.1 10 track 10
-!
-route-map VLAN20 deny 10
- match ip address VLAN10
 !
 route-map VLAN20 permit 20
  match ip address VLAN20-EX
  set ip next-hop verify-availability 14.25.3.1 10 track 20
 !
 route-map PAT10 permit 10
- match ip address VLAN10
- match interface Ethernet0/0
-!
-route-map PAT10 permit 20
- match ip address VLAN20
  match interface Ethernet0/0
 !
 route-map PAT20 permit 10
- match ip address VLAN20
  match interface Ethernet0/1
 !
-route-map PAT20 permit 20
- match ip address VLAN10
- match interface Ethernet0/1
+
 
 
 ```
